@@ -1,13 +1,12 @@
 import pygame, sys
 from pygame import locals
-from os import path
 from state.state import State
 from view_engine import ViewEngine
 
 class Main: 
     def __init__(self):
         self.run = True
-        self.fps = 60
+        self.fps = 30
         self.name = "Island Wars"
         self.WINDOW_WIDTH = 1000
         self.WINDOW_HEIGHT = 500
@@ -38,11 +37,9 @@ class Main:
                     sys.exit()
 
             self.display.fill(self.backgroundColor)
-
             self.view_engine.render()
-
+            
             self.clock.tick(self.fps)
-
             pygame.display.update()
     
 
