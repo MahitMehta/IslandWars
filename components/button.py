@@ -1,63 +1,63 @@
 import pygame
+from components.rect import Rect, IOptions as IRectOptions
 
-class IOptions: 
-    width: int
-    height: int
-    borderColor: tuple
-    center: bool
-    color: tuple
-    text: str
+class IButtonOptions: 
+    def __init__(self, width=0, height=0, borderColor=None, isBorder=False, borderWidth=2, center=False, color=(0, 0, 0), text=""): 
+        self.width: int = width
+        self.height: int = height
+        self.borderColor: tuple = borderColor
+        self.borderWidth: int = borderWidth
+        self.center: bool = center
+        self.color: tuple = color
+        self.text: str = text 
+        self.isBorder: bool = isBorder
     
 class Button:
-    def __init__(self, view_engine, options:IOptions, onClick): 
+    def __init__(self, view_engine, options:IButtonOptions, onClick, x=0, y=0): 
         self.view_engine = view_engine
-        self.options:IOptions = options
-        self.x:int | None = None
-        self.y: int | None = None
+        self.options:IButtonOptions = options
+        self.x:int = x
+        self.y: int = y
         self.onClick = onClick
 
-    def init(self): 
-        self.x = int(self.view_engine.engine.WINDOW_WIDTH / 2) 
-        self.y = int(self.view_engine.engine.WINDOW_HEIGHT / 2)
-
     def render(self): 
-        try: 
-            if isinstance(self.options['borderColor'], tuple): 
-                self.border()
-        except KeyError: 
-            pass
-        
-        self.body()
-        self.handleClick()
+        x, y = (self.x, self.y)
+        if self.options.center: x -= (self.options.width // 2); y -= (self.options.height // 2)
 
-        # try: 
-        #     if isinstance(self.options['text'], str): 
-        #        self.setText()
-        # except: 
-        #     pass
+        if self.options.isBorder: 
+            rect = Rect(
+                display=self.view_engine.engine.display,
+                x=x, 
+                y=y, 
+                options=IRectOptions(
+                    width=self.options.width, 
+                    height=self.options.height, 
+                    color=self.options.color,
+                    borderColor=self.options.borderColor,
+                    borderWidth=self.options.borderWidth,
+                    text=self.options.text,
+                    textOptions={ "color": (0, 0, 0) }
+                ), 
+                border=True)
+            rect.render()
+
+        self.handleClick()
         
     def handleClick(self): 
-        borderWidth = 0
-        try: 
-            borderWidth = self.options['borderWidth']
-        except: 
-            pass
+        borderWidth = self.options.borderWidth if self.options.borderWidth else 0
     
         x = int(self.x)
         y = int(self.y)
 
-        width = int(self.options['width']) + borderWidth
-        height = int(self.options['height']) + borderWidth
+        width = int(self.options.width) + borderWidth
+        height = int(self.options.height) + borderWidth
 
-        maxWidth = int(x + self.options['width'])
-        maxHeight = int(y + self.options['height'])
+        if self.options.center: 
+            x -= int(width / 2)
+            y -= int(height / 2)
 
-        try: 
-            if self.options['center'] == True: 
-                x -= int(width / 2)
-                y -= int(height / 2)
-        except: 
-            pass
+        maxWidth = int(x + self.options.width)
+        maxHeight = int(y + self.options.height)
 
         for ev in self.view_engine.events:
             if ev.type == pygame.MOUSEBUTTONDOWN:
@@ -74,42 +74,3 @@ class Button:
         text = smallfont.render(self.options['text'] , True , (0, 0, 0))
 
         self.view_engine.engine.display.blit(text , x, y)
-
-
-    def border(self):
-        try: 
-            borderWidth = self.options['borderWidth']
-            x = int(self.x)
-            y = int(self.y)
-
-            width = int(self.options['width']) + borderWidth
-            height = int(self.options['height']) + borderWidth
-
-            if self.options['center'] == True: 
-                x -= int(width / 2)
-                y -= int(height / 2)
-
-            pygame.draw.rect(
-                self.view_engine.engine.display,
-                self.options['borderColor'],
-                [ x, y, width, height ]
-            )
-        except KeyError: 
-            pass
-
-    def body(self): 
-        x = self.x
-        y = self.y
-
-        try: 
-            if self.options['center'] == True: 
-                x -= int(self.options['width'] / 2)
-                y -= int(self.options['height'] / 2)
-        except KeyError: 
-            pass
-
-        pygame.draw.rect(
-            self.view_engine.engine.display,
-            self.options['color'],
-            [ x, y, self.options['width'], self.options['height'] ]
-        )

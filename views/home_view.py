@@ -1,4 +1,5 @@
-from components.button import Button
+from os import X_OK
+from components.button import Button, IButtonOptions
 from views.constants import views
 
 class HomeView: 
@@ -9,21 +10,26 @@ class HomeView:
         self.view_engine.setBackground((174, 228, 255))
 
     def render(self):
+        x = int(self.view_engine.engine.WINDOW_WIDTH / 2) 
+        y = int(self.view_engine.engine.WINDOW_HEIGHT / 2)
+
         button = Button(
             view_engine=self.view_engine,
-            options={ 
-                "width": 100, 
-                "height": 40, 
-                "center": True,
-                "color": (0, 164, 244),
-                "borderColor": (0, 75, 111),
-                "borderWidth": 6,
-                "text": "Play"
-            },
-            onClick=self.onClick
+            options=IButtonOptions(
+                width=100, 
+                height=40, 
+                center=True,
+                color=(0, 164, 244),
+                borderColor=(0, 75, 111),
+                borderWidth=6,
+                text="Play",
+                isBorder=True
+            ),
+            x=x,
+            y=y,
+            onClick=self.handleStart
         ) 
-        button.init()
         button.render()
 
-    def onClick(self):
+    def handleStart(self):
         self.view_engine.view = views.ISLAND_VIEW

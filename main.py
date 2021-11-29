@@ -6,7 +6,7 @@ from view_engine import ViewEngine
 class Main: 
     def __init__(self):
         self.run = True
-        self.fps = 30
+        self.fps = 60
         self.name = "Island Wars"
         self.WINDOW_WIDTH = 1000
         self.WINDOW_HEIGHT = 500

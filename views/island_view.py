@@ -2,6 +2,7 @@ from components.island_left import IslandLeft
 from components.island_right import IslandRight
 from components.character import Character
 from components.health_bar import HealthBar
+from components.game_over import GameOver
 
 class IslandView: 
     def __init__(self, view_engine): 
@@ -16,6 +17,27 @@ class IslandView:
         self.characters()
         self.health_bars()
 
+        health_left = self.view_engine.engine.state.characterLeft.health
+        health_right = self.view_engine.engine.state.characterRight.health
+
+        if health_left == 0 or health_right == 0: self.game_over(health_left, health_right)
+
+    def game_over(self, health_left, health_right): 
+        self.view_engine.engine.state.characterLeft.disabled = True
+        self.view_engine.engine.state.characterRight.disabled = True
+
+        if health_left == 0: 
+            message = "Red Won!"
+        elif health_right == 0: 
+            message = "Blue Won!"
+        elif health_left == 0 and health_right == 0: 
+            message = "Tie!"
+        else: 
+            message = "Game Over!"
+
+        game_over_menu = GameOver(view_engine=self.view_engine)
+        game_over_menu.render(message=message)
+
     def health_bars(self): 
         width = self.view_engine.engine.WINDOW_WIDTH
         state = self.view_engine.engine.state
@@ -27,7 +49,7 @@ class IslandView:
         x, y = (30, 30)
         health_bar_left.render(x=x, y=y, color=(0, 104, 255), borderColor=(0, 81, 199))
 
-        health_bar_right = HealthBar(self.view_engine, state=character_right)
+        health_bar_right = HealthBar(self.view_engine, state=character_right, left=False)
         x, y = (width - 30 - health_bar_left.width, 30)
         health_bar_right.render(x=x, y=y, color=(255, 67, 67), borderColor=(199, 0, 0))
 

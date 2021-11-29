@@ -1,4 +1,3 @@
-from typing import Collection
 from utils import tools
 from constants import assets 
 import pygame
@@ -44,6 +43,8 @@ class Character:
             self.render_vector(self.right_vectors[self.frame], x, y) 
         elif self.movement_status == "shooting": 
             self.render_vector(self.shoot_vector, x, y)
+
+        if self.state.disabled: return
 
         self.render_bullets()
         self.movementListener()
@@ -119,7 +120,7 @@ class Character:
 
     def movementListener(self): 
         keys = pygame.key.get_pressed()
-        vel = 65 / self.view_engine.engine.fps
+        vel = 95 / self.view_engine.engine.fps
         
         if self.characterKey == 'characterRight':
             inc =  (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * vel
