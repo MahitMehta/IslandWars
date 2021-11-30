@@ -4,3 +4,11 @@ Commands
 - env
     - . env/bin/activate
     - deactivate
+
+- Build (Windows)
+    - python setup.py build 
+     python setup.py bdist_msi
+    
+- Build (MacOS)
+    - python setup.py bdist_mac --iconfile=icon.icns
+    - python setup.py bdist_dmg 

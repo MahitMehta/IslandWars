@@ -1,8 +1,15 @@
 import pygame
-from os import path
+import os, sys, inspect
+
+def base():
+   if getattr(sys,"frozen",False):
+       return os.path.dirname(os.path.abspath(sys.executable))
+   else:
+       thisdir = os.path.dirname(inspect.getfile(inspect.currentframe()))
+       return os.path.abspath(os.path.join(thisdir, os.pardir))
 
 def load_asset(asset_path): 
-    asset = pygame.image.load(path.join(path.dirname(__file__), '../assets', asset_path))
+    asset = pygame.image.load(os.path.join(base(), 'assets', asset_path))
     asset.set_colorkey((0, 0, 0))
     return asset
 
