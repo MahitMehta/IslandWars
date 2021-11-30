@@ -7,8 +7,9 @@ Commands
 
 - Build (Windows)
     - python setup.py build 
-     python setup.py bdist_msi
+    - python setup.py bdist_msi
     
 - Build (MacOS)
+    - remove ./env/lib/pygame/examples
     - python setup.py bdist_mac --iconfile=icon.icns
     - python setup.py bdist_dmg 
